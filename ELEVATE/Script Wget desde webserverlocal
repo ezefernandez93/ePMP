@@ -1,0 +1,19 @@
+03-23-2017 08:12 AM - edited ‎03-23-2017 08:19 AM
+
+Our current script for upgrading relies on the files sitting on a local web server.
+ 
+ 
+mkdir -p /etc/persistent/mnt/config/
+cd /etc/persistent/mnt/config/
+wget http://sw.gd.tt/elevate/.configured_3.3
+wget http://sw.gd.tt/elevate/DA_VERSION
+wget http://sw.gd.tt/elevate/passwd
+save
+cd
+wget -O /tmp/fwupdate.bin http://sw.gd.tt/elevate/UBNTXW-ubntxw-squashfs-factory_3.3-RC14.bin
+fwupdate.real -m /tmp/fwupdate.bin
+The files you are specifically interested in is the .configured_<version> , passwd and I believe DA_VERSION tells the rest of the code where to look for config files. We don't use radius (yet) and copying the SSH host keys seems like a bad idea. The config file is quite simple to edit / update if you open it up in a text editor (I'll be turning this into a python script at some point with some extra checks and balances, just opening up a SSH connection to the SM and pasting this in works well enough for now).
+ 
+Yeah, /etc/persistent/mnt doesn't exist on a normal UBNT SM hence it is the first thing my script creates.
+ 
+The same script works for 3.2 as we have a .configured_3.2 and UBNTXW-ubntxw-squashfs-factory_3.2.bin on the server as well. We are testing IPv6 out on the cambium as we have 2 countries that we operate in where we cannot get IPv4 for.
